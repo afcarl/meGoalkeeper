@@ -23,7 +23,7 @@ class Player(object):
                 save_next = False
             #
             frame = self.process(frame)
-
+            #
             if self.show:
                 cv2.imshow(self.winname, frame)
                 key = cv2.waitKey(1) & 0xFF
@@ -31,8 +31,6 @@ class Player(object):
                     break
                 if key == ord('s'):
                     save_next = True
-                    frame = camera.read()
-                    cv2.imwrite("/tmp/frame.png", frame)
 
 
 if __name__ == '__main__':
