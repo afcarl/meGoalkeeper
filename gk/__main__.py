@@ -1,6 +1,6 @@
-from goalkeeper.video import Video
-from goalkeeper.tracker import BallTracker
-from goalkeeper.perspective import Perspective
+from gk.video import Video
+from gk.tracker import BallTracker
+from gk.perspective import Perspective
 
 class GoalKeeper(Video):
 
@@ -19,7 +19,7 @@ class GoalKeeper(Video):
     
 
 if __name__ == '__main__':
-    from goalkeeper.camera import CVCamera
+    from gk.camera import CVCamera
     camera = CVCamera(640, 480)
     gk = GoalKeeper(camera)
     gk.run()

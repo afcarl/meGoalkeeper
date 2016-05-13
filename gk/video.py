@@ -39,7 +39,7 @@ class Video(object):
 
 
 if __name__ == '__main__':
-    from goalkeeper.camera import CVCamera
+    from gk.camera import CVCamera
     camera = CVCamera(640, 480)
     player = Player(camera)
     player.run()

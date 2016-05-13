@@ -45,8 +45,8 @@ class Perspective(object):
 
 
 if __name__ == '__main__':
-    from goalkeeper.camera import CVCamera
-    from goalkeeper.video import Video
+    from gk.camera import CVCamera
+    from gk.video import Video
     camera = CVCamera(640, 480)
     video = Video(camera)
     perspective = Perspective(video.winname, 400, show=True)
