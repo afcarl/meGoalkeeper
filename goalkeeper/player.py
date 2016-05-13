@@ -13,7 +13,7 @@ class Player(object):
     def process(self, frame):
         return frame
 
-    def run(self):
+    def iterframes(self):
         save_next = False
         while True:
             frame = self.src.read()
@@ -23,6 +23,7 @@ class Player(object):
                 save_next = False
             #
             frame = self.process(frame)
+            yield frame
             #
             if self.show:
                 cv2.imshow(self.winname, frame)
@@ -31,6 +32,10 @@ class Player(object):
                     break
                 if key == ord('s'):
                     save_next = True
+
+    def run(self):
+        for frame in self.iterframes():
+            pass
 
 
 if __name__ == '__main__':
