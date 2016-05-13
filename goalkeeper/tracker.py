@@ -56,12 +56,12 @@ class BallTracker(object):
 
 if __name__ == '__main__':
     from goalkeeper.camera import CVCamera
-    from goalkeeper.player import Player
+    from goalkeeper.video import Video
     camera = CVCamera(640, 480)
-    player = Player(camera)
+    video = Video(camera)
     balltracker = BallTracker(lower=(0, 0, 60),
                               upper=(7, 255, 255),
                               show=True)
-    player.process = balltracker.process
-    player.run()
+    video.process = balltracker.process
+    video.run()
 

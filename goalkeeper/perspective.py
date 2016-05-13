@@ -10,10 +10,6 @@ class Perspective(object):
         self.show = show
         self.points = []
         cv2.setMouseCallback(winname, self.onclick)
-        ## self.a = (146, 52)
-        ## self.b = (269, 58)
-        ## self.c = (310, 255)
-        ## self.d = (105, 249)
 
     def onclick(self, event, x, y, flags, param):
         if len(self.points) == 4:
@@ -50,10 +46,10 @@ class Perspective(object):
 
 if __name__ == '__main__':
     from goalkeeper.camera import CVCamera
-    from goalkeeper.player import Player
+    from goalkeeper.video import Video
     camera = CVCamera(640, 480)
-    player = Player(camera)
-    perspective = Perspective(player.winname, 400, show=True)
-    player.process = perspective.process
-    player.run()
+    video = Video(camera)
+    perspective = Perspective(video.winname, 400, show=True)
+    video.process = perspective.process
+    video.run()
 

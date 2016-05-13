@@ -1,6 +1,6 @@
 import cv2
 
-class Player(object):
+class Video(object):
 
     def __init__(self, src, winname='frame', show=True,
                  filename='/tmp/frame.png'):
