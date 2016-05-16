@@ -27,23 +27,58 @@ class BallTracker(object):
 
     Ball = namedtuple('Ball', ['center', 'radius'])
 
-    def __init__(self, lower, upper, show=False):
+    def __init__(self, lower, upper, show=False, interactive=False):
+        self.winname = "Ball Tracker"
         self.lower = lower
         self.upper = upper
         self.show = show
+        self.interactive = interactive
         self.ball = None
+        if self.interactive:
+            self.setup_interactive()
 
     @classmethod
-    def fromconf(cls, show, conf):
+    def fromconf(cls, show, interactive, conf):
         lower = tuple(conf['lower'])
         upper = tuple(conf['upper'])
-        return cls(lower, upper, show)
+        return cls(lower, upper, show, interactive)
 
     def toconf(self):
         return dict(lower = self.lower,
                     upper = self.upper)
 
+    def setup_interactive(self):
+        winname = self.winname
+        cv2.namedWindow(winname)
+        hmin, smin, vmin = self.lower
+        hmax, smax, vmax = self.upper
+        cv2.createTrackbar("H_MIN", winname, hmin, 255, self.onchange)
+        cv2.createTrackbar("S_MIN", winname, smin, 255, self.onchange)
+        cv2.createTrackbar("V_MIN", winname, vmin, 255, self.onchange)
+        cv2.createTrackbar("H_MAX", winname, hmax, 255, self.onchange)
+        cv2.createTrackbar("S_MAX", winname, smax, 255, self.onchange)
+        cv2.createTrackbar("V_MAX", winname, vmax, 255, self.onchange)
+
+    def onchange(self, v):
+        winname = self.winname
+        hmin = cv2.getTrackbarPos("H_MIN", winname)
+        smin = cv2.getTrackbarPos("S_MIN", winname)
+        vmin = cv2.getTrackbarPos("V_MIN", winname)
+        hmax = cv2.getTrackbarPos("H_MAX", winname)
+        smax = cv2.getTrackbarPos("S_MAX", winname)
+        vmax = cv2.getTrackbarPos("V_MAX", winname)
+        self.lower = (hmin, smin, vmin)
+        self.upper = (hmax, smax, vmax)
+
+    def show_interactive(self, frame):
+        hsv = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
+        mask = cv2.inRange(hsv, self.lower, self.upper)
+        preview = cv2.bitwise_and(frame, frame, mask=mask)
+        cv2.imshow(self.winname, preview)
+
     def process(self, frame):
+        if self.interactive:
+            self.show_interactive(frame)
         cnts = find_colored_contours(frame, self.lower, self.upper)
 	if len(cnts) <= 0:
             self.ball = None
