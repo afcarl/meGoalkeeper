@@ -1,4 +1,5 @@
 import cv2
+import time
 
 class Video(object):
 
@@ -18,6 +19,8 @@ class Video(object):
 
     def iterframes(self):
         save_next = False
+        t1 = time.time()
+        i = 0
         while True:
             frame = self.src.read()
             if save_next:
@@ -27,6 +30,12 @@ class Video(object):
             #
             frame = self.process(frame)
             yield frame
+            i += 1
+            if i == 30:
+                fps = 30/(time.time() - t1)
+                print 'fps: %.2f' % fps
+                t1 = time.time()
+                i = 0
             #
             if self.show:
                 cv2.imshow(self.winname, frame)
