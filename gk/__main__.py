@@ -6,6 +6,7 @@ Options:
   --noload        Don't load the config file
   --nosave        Don't save the config file
   --iball         Display interactive controls to adjust the ball thresholds
+                  (imply --show)
   --show          Display the frames
   -h --help       show this
 """
@@ -54,7 +55,7 @@ class GoalKeeper(Video):
         self.conf = conf
         self.perspective = Perspective.fromconf(winname, show=show,
                                                 conf=conf.field)
-        self.tracker = BallTracker.fromconf(shpw=show, interactive=iball,
+        self.tracker = BallTracker.fromconf(show=show, interactive=iball,
                                             conf=conf.ball)
 
     def process(self, frame):
@@ -75,9 +76,11 @@ def main():
     else:
         conf = Conf(configfile)
     #
-    gk = GoalKeeper(conf,
-                    show = args['--show'],
-                    ball_interactive = args['--iball'])
+    show = args['--show']
+    iball = args['--iball']
+    if iball:
+        show = True
+    gk = GoalKeeper(conf, show=show, iball=iball)
     gk.run()
     #
     if not args['--nosave']:
