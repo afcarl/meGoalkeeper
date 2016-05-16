@@ -4,12 +4,31 @@ from imutils.perspective import order_points
 
 class Perspective(object):
 
-    def __init__(self, winname, width, show=False):
+    def __init__(self, winname, width, points=None, show=False):
         self.winname = winname
         self.width = width
         self.show = show
-        self.points = []
+        if points is None:
+            points = []
+        self.points = points
         cv2.setMouseCallback(winname, self.onclick)
+
+    @classmethod
+    def fromconf(cls, winname, show, conf):
+        width = conf['width']
+        points = conf['points'] or []
+        if len(points) == 4:
+            points = np.array(points, dtype="float32")
+        else:
+            points = [tuple(p) for p in points]
+        return cls(winname, width, points, show)
+
+    def toconf(self):
+        points = self.points
+        if isinstance(points, np.ndarray):
+            points = points.tolist()
+        return dict(width = self.width,
+                    points = points)
 
     def onclick(self, event, x, y, flags, param):
         if len(self.points) == 4:

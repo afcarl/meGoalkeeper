@@ -33,6 +33,16 @@ class BallTracker(object):
         self.show = show
         self.ball = None
 
+    @classmethod
+    def fromconf(cls, show, conf):
+        lower = tuple(conf['lower'])
+        upper = tuple(conf['upper'])
+        return cls(lower, upper, show)
+
+    def toconf(self):
+        return dict(lower = self.lower,
+                    upper = self.upper)
+
     def process(self, frame):
         cnts = find_colored_contours(frame, self.lower, self.upper)
 	if len(cnts) <= 0:

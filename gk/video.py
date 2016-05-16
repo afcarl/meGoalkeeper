@@ -13,6 +13,9 @@ class Video(object):
     def process(self, frame):
         return frame
 
+    def end(self):
+        pass
+
     def iterframes(self):
         save_next = False
         while True:
@@ -32,6 +35,7 @@ class Video(object):
                     break
                 if key == ord('s'):
                     save_next = True
+        self.end()
 
     def run(self):
         for frame in self.iterframes():

@@ -8,10 +8,10 @@ except ImportError:
 
 class CVCamera(object):
 
-    def __init__(self, width, height):
+    def __init__(self, width, height, deviceno=0):
         CAP_PROP_FRAME_WIDTH = 3
         CAP_PROP_FRAME_HEIGHT = 4
-        camera = cv2.VideoCapture(0)
+        camera = cv2.VideoCapture(deviceno)
         camera.set(CAP_PROP_FRAME_WIDTH, width)
         camera.set(CAP_PROP_FRAME_HEIGHT, height)
         self.camera = camera
