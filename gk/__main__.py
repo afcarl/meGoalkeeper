@@ -3,6 +3,8 @@ Usage: gk [options]
 
 Options:
   -c --conf=FILE  Path to the configuration file [Default: gk.conf]
+  --noload        Don't load the config file
+  --nosave        Don't save the config file
   -h --help       show this
 """
 
@@ -30,8 +32,8 @@ class Conf(object):
         upper = (7, 255, 255)  # HSV
     )
 
-    def __init__(self, filename):
-        if os.path.exists(filename):
+    def __init__(self, filename=None):
+        if filename is not None and os.path.exists(filename):
             with open(filename) as f:
                 conf = json.load(f)
             self.__dict__.update(conf)
@@ -64,10 +66,16 @@ def main():
     import docopt
     args = docopt.docopt(__doc__)
     configfile = args['--conf']
-    conf = Conf(configfile)
+    if args['--noload']:
+        conf = Conf()
+    else:
+        conf = Conf(configfile)
+    #
     gk = GoalKeeper(conf)
     gk.run()
-    conf.save(configfile)
+    #
+    if not args['--nosave']:
+        conf.save(configfile)
 
 
 if __name__ == '__main__':

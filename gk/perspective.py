@@ -35,7 +35,6 @@ class Perspective(object):
             return
         if event == cv2.EVENT_LBUTTONUP:
             point = (x, y)
-            print 'x = %s' % (point,)
             self.points.append(point)
             if len(self.points) == 4:
                 # automatically sort the points
@@ -46,7 +45,7 @@ class Perspective(object):
         if len(self.points) < 4:
             if self.show:
                 for point in self.points:
-                    cv2.circle(frame, point, 5, (255, 0, 0))
+                    cv2.circle(frame, point, 5, (255, 0, 0), 2)
             return frame
         else:
             return self.warp(frame)
