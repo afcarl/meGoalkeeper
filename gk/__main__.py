@@ -13,6 +13,7 @@ Options:
 
 import os.path
 import json
+import cv2
 from gk.camera import CVCamera
 from gk.video import Video
 from gk.tracker import BallTracker
@@ -88,4 +89,7 @@ def main():
 
 
 if __name__ == '__main__':
-    main()
+    try:
+        main()
+    finally:
+        cv2.destroyAllWindows()
