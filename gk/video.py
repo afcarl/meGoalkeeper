@@ -3,12 +3,13 @@ import time
 
 class Video(object):
 
-    def __init__(self, src, winname='frame', show=True,
-                 filename='/tmp/frame.png'):
+    def __init__(self, src, winname='frame', show=True, dstfile=None,
+                 framename='/tmp/frame.png'):
         self.src = src
         self.winname = winname
         self.show = show
-        self.filename = filename
+        self.dstfile = dstfile
+        self.framename = framename
         cv2.namedWindow(winname)
 
     def process(self, frame):
@@ -18,6 +19,12 @@ class Video(object):
         pass
 
     def iterframes(self):
+        if self.dstfile is not None:
+            fourcc = cv2.VideoWriter_fourcc(*'X264')
+            dstvideo = cv2.VideoWriter(self.dstfile, fourcc, 30, (200, 200))
+        else:
+            dstvideo = None
+
         save_next = False
         t1 = time.time()
         i = 0
@@ -25,7 +32,7 @@ class Video(object):
             frame = self.src.read()
             if save_next:
                 print 'Saving frame to', self.filename
-                cv2.imwrite(self.filename, frame)
+                cv2.imwrite(self.framename, frame)
                 save_next = False
             #
             frame = self.process(frame)
@@ -44,6 +51,12 @@ class Video(object):
                     break
                 if key == ord('s'):
                     save_next = True
+            #
+            if dstvideo:
+                dstvideo.write(frame)
+        #
+        if dstvideo:
+            dstvideo.release()
         self.end()
 
     def run(self):
