@@ -23,6 +23,7 @@ from gk.camera import CVCamera, VideoFile
 from gk.video import Video
 from gk.tracker import BallTracker
 from gk.perspective import Perspective
+from gk.trajectory import Trajectory
 
 
 class Conf(object):
@@ -68,10 +69,14 @@ class GoalKeeper(Video):
                                                 conf=conf.field)
         self.tracker = BallTracker.fromconf(show=show, interactive=iball,
                                             conf=conf.ball)
+        self.trajectory = Trajectory(show=show)
 
     def process(self, frame):
         frame = self.perspective.process(frame)
         frame = self.tracker.process(frame)
+        if self.tracker.ball:
+            self.trajectory.add_point(self.tracker.ball.center)
+        frame = self.trajectory.process(frame)
         return frame
 
     def end(self):
