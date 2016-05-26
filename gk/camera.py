@@ -29,7 +29,29 @@ class CVCamera(object):
         pass
 
     def __exit__(self, etype, evalue, tb):
-        self.release()
+        self.close()
+
+
+class VideoFile(object):
+
+    def __init__(self, filename):
+        cap = cv2.VideoCapture(filename)
+        self.cap = cap
+
+    def read(self):
+        (grabbed, frame) = self.cap.read()
+        if not grabbed:
+            return None
+        return frame
+
+    def close(self):
+        self.cap.release()
+
+    def __enter__(self):
+        pass
+
+    def __exit__(self, etype, evalue, tb):
+        self.close()
 
 
 class MyPiCamera(object):

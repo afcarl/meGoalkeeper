@@ -30,6 +30,8 @@ class Video(object):
         i = 0
         while True:
             frame = self.src.read()
+            if frame is None:
+                break
             if save_next:
                 print 'Saving frame to', self.filename
                 cv2.imwrite(self.framename, frame)
