@@ -11,6 +11,7 @@ Options:
                      thresholds (implies --show)
   --ifield           Select the field interactively
   --step             Advance frame-by-frame (implies --show)
+  --skip=N           Skip the first N frames
   --show             Display the frames
   -h --help          show this
 """
@@ -90,6 +91,11 @@ def main():
         camera = VideoFile(args['--input'])
     else:
         camera = CVCamera(conf.camera['width'], conf.camera['height'])
+    #
+    if args['--skip']:
+        skip = int(args['--skip'])
+        for _ in range(skip):
+            camera.read()
     #
     show = args['--show']
     iball = args['--iball']
