@@ -2,13 +2,14 @@
 Usage: gk [options]
 
 Options:
-  -c --conf=FILE  Path to the configuration file [Default: gk.conf]
-  --noload        Don't load the config file
-  --nosave        Don't save the config file
-  --iball         Display interactive controls to adjust the ball thresholds
-                  (imply --show)
-  --show          Display the frames
-  -h --help       show this
+  -c --conf=FILE     Path to the configuration file [Default: gk.conf]
+  --noload           Don't load the config file
+  --nosave           Don't save the config file
+  -o --output=FILE   Save the processed video to FILE
+  --iball            Display interactive controls to adjust the ball
+                     thresholds (imply --show)
+  --show             Display the frames
+  -h --help          show this
 """
 
 import os.path
@@ -18,6 +19,7 @@ from gk.camera import CVCamera
 from gk.video import Video
 from gk.tracker import BallTracker
 from gk.perspective import Perspective
+
 
 class Conf(object):
 
@@ -49,10 +51,10 @@ class Conf(object):
 
 class GoalKeeper(Video):
 
-    def __init__(self, conf, show=False, iball=False):
+    def __init__(self, conf, show=False, iball=False, output=None):
         camera = CVCamera(conf.camera['width'], conf.camera['height'])
         winname = 'frame'
-        Video.__init__(self, camera, winname, show)
+        Video.__init__(self, camera, winname, show, dstfile=output)
         self.conf = conf
         self.perspective = Perspective.fromconf(winname, show=show,
                                                 conf=conf.field)
@@ -79,9 +81,11 @@ def main():
     #
     show = args['--show']
     iball = args['--iball']
+    output = args['--output']
     if iball:
         show = True
-    gk = GoalKeeper(conf, show=show, iball=iball)
+    #
+    gk = GoalKeeper(conf, show=show, iball=iball, output=output)
     gk.run()
     #
     if not args['--nosave']:
