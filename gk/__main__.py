@@ -8,8 +8,9 @@ Options:
   -i --input=FILE    Read the video from FILE instead of from camera
   -o --output=FILE   Save the processed video to FILE
   --iball            Display interactive controls to adjust the ball
-                     thresholds (imply --show)
+                     thresholds (implies --show)
   --ifield           Select the field interactively
+  --step             Advance frame-by-frame (implies --show)
   --show             Display the frames
   -h --help          show this
 """
@@ -54,9 +55,10 @@ class Conf(object):
 class GoalKeeper(Video):
 
     def __init__(self, conf, camera, show=False, iball=False, ifield=False,
-                 output=None):
+                 singlestep=False, output=None):
         winname = 'frame'
-        Video.__init__(self, camera, winname, show, dstfile=output)
+        Video.__init__(self, camera, winname, show,
+                       dstfile=output, singlestep=singlestep)
         self.conf = conf
         #
         if ifield:
@@ -92,12 +94,13 @@ def main():
     show = args['--show']
     iball = args['--iball']
     ifield = args['--ifield']
+    singlestep = args['--step']
     output = args['--output']
     if iball:
         show = True
     #
     gk = GoalKeeper(conf, camera, show=show, iball=iball, ifield=ifield,
-                    output=output)
+                    singlestep=singlestep, output=output)
     gk.run()
     #
     if not args['--nosave']:

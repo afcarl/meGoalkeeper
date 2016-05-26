@@ -4,10 +4,11 @@ import time
 class Video(object):
 
     def __init__(self, src, winname='frame', show=True, dstfile=None,
-                 framename='/tmp/frame.png'):
+                 singlestep=False, framename='/tmp/frame.png'):
         self.src = src
         self.winname = winname
         self.show = show
+        self.singlestep = singlestep
         self.dstfile = dstfile
         self.framename = framename
         cv2.namedWindow(winname)
@@ -28,6 +29,9 @@ class Video(object):
         save_next = False
         t1 = time.time()
         i = 0
+        wait_time = 1
+        if self.singlestep:
+            wait_time = 0 # wait until we click or press a key
         while True:
             frame = self.src.read()
             if frame is None:
@@ -48,7 +52,7 @@ class Video(object):
             #
             if self.show:
                 cv2.imshow(self.winname, frame)
-                key = cv2.waitKey(1) & 0xFF
+                key = cv2.waitKey(wait_time) & 0xFF
                 if key == ord("q"):
                     break
                 if key == ord('s'):
