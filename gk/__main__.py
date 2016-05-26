@@ -9,6 +9,7 @@ Options:
   -o --output=FILE   Save the processed video to FILE
   --iball            Display interactive controls to adjust the ball
                      thresholds (imply --show)
+  --ifield           Select the field interactively
   --show             Display the frames
   -h --help          show this
 """
@@ -52,10 +53,14 @@ class Conf(object):
 
 class GoalKeeper(Video):
 
-    def __init__(self, conf, camera, show=False, iball=False, output=None):
+    def __init__(self, conf, camera, show=False, iball=False, ifield=False,
+                 output=None):
         winname = 'frame'
         Video.__init__(self, camera, winname, show, dstfile=output)
         self.conf = conf
+        #
+        if ifield:
+            conf.field['points'] = None
         self.perspective = Perspective.fromconf(winname, show=show,
                                                 conf=conf.field)
         self.tracker = BallTracker.fromconf(show=show, interactive=iball,
@@ -86,11 +91,13 @@ def main():
     #
     show = args['--show']
     iball = args['--iball']
+    ifield = args['--ifield']
     output = args['--output']
     if iball:
         show = True
     #
-    gk = GoalKeeper(conf, camera, show=show, iball=iball, output=output)
+    gk = GoalKeeper(conf, camera, show=show, iball=iball, ifield=ifield,
+                    output=output)
     gk.run()
     #
     if not args['--nosave']:
